@@ -9,4 +9,10 @@ class BaseController
         extract($data, EXTR_SKIP);
         require __DIR__ . '/../views/pages/' . $view . '.php';
     }
+
+    protected function redirect(string $url): void
+    {
+        header('Location: ' . $url);
+        exit;
+    }
 }

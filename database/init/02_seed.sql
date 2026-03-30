@@ -13,10 +13,11 @@ INSERT INTO auteurs (nom, prenom, bio) VALUES
 ('Bernard', 'Pierre', 'Analyste politique et économique');
 
 -- Insérer les administrateurs
--- Note: Utiliser password_hash() en PHP pour hasher les vrais mots de passe en production
+-- Compte de démo pour le développement
+-- username: cedy
+-- password: cedy123
 INSERT INTO admin (username, password, email) VALUES
-('admin1', '$2y$10$YIjlrDmasdasdN3P5c.I7uFKy7rTh2PEeq6.KmvKy8h8aZk9Pxm', 'admin1@war-news.com'),
-('admin2', '$2y$10$YIjlrDmasdasdN3P5c.I7uFKy7rTh2PEeq6.KmvKy8h8aZk9Pxm', 'admin2@war-news.com');
+('cedy', 'cedy123', 'cedy@gmail.com');
 
 -- Insérer les articles
 INSERT INTO articles (titre, slug, contenus, description, image_url, author_id, category_id, published) VALUES

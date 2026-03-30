@@ -17,6 +17,11 @@
 </head>
 <body>
 <main class="container">
+    <div class="actions" style="display:flex;justify-content:space-between;align-items:center;">
+        <p style="margin:0;">Connecté : <strong><?= htmlspecialchars((string) ($_SESSION['admin']['username'] ?? '')) ?></strong></p>
+        <a class="btn btn-secondary" href="/backoffice/index.php?page=auth&action=logout">Se déconnecter</a>
+    </div>
+
     <h1>Gestion des articles</h1>
 
     <div class="actions">
