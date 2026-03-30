@@ -3,29 +3,35 @@
  * Configuration de la connexion à la base de données PostgreSQL
  */
 
-// Récupérer les variables d'environnement (depuis Docker)
-$db_host = getenv('POSTGRES_HOST') ?: 'localhost';
-$db_user = getenv('POSTGRES_USER') ?: 'webdesignuser';
-$db_password = getenv('POSTGRES_PASSWORD') ?: 'webdesignmdp';
-$db_name = getenv('POSTGRES_DB') ?: 'webdesigndb';
-$db_port = getenv('POSTGRES_PORT') ?: '5432';
+function getPDOConnection(): PDO
+{
+    static $pdo = null;
 
-// DSN (Data Source Name) pour PostgreSQL
-$dsn = "pgsql:host=$db_host;port=$db_port;dbname=$db_name";
+    if ($pdo instanceof PDO) {
+        return $pdo;
+    }
 
-try {
-    // Créer la connexion PDO
-    $pdo = new PDO($dsn, $db_user, $db_password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
+    $db_host = getenv('POSTGRES_HOST') ?: 'localhost';
+    $db_user = getenv('POSTGRES_USER') ?: 'webdesignuser';
+    $db_password = getenv('POSTGRES_PASSWORD') ?: 'webdesignmdp';
+    $db_name = getenv('POSTGRES_DB') ?: 'webdesigndb';
+    $db_port = getenv('POSTGRES_PORT') ?: '5432';
 
-    // La connexion est réussie (message optionnel pour le débogage)
-    // echo "Connexion à la BDD réussie !";
+    $dsn = "pgsql:host=$db_host;port=$db_port;dbname=$db_name";
 
-} catch (PDOException $e) {
-    // En cas d'erreur, afficher le message
-    die("Erreur de connexion à la base de données : " . $e->getMessage());
+    try {
+        $pdo = new PDO($dsn, $db_user, $db_password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]);
+
+        return $pdo;
+    } catch (PDOException $e) {
+        die("Erreur de connexion à la base de données : " . $e->getMessage());
+    }
 }
+
+// Compatibilité avec les scripts existants (ex: test_db.php)
+$pdo = getPDOConnection();
 ?>

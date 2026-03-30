@@ -32,6 +32,7 @@ services:
     volumes:
       - ./Backoffice:/var/www/html/backoffice
       - ./Frontoffice:/var/www/html/frontoffice
+      - ./uploads:/var/www/html/uploads
     depends_on:
       postgres:
         condition: service_healthy
