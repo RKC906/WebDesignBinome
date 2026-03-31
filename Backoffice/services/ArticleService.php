@@ -58,7 +58,7 @@ class ArticleService
         $stmt->execute([
             'titre' => $data['titre'],
             'slug' => $data['slug'],
-            'contenus' => $data['contenus'],
+            'contenus' => $data['contenus'],    
             'description' => $data['description'] ?: null,
             'image_url' => $imageUrl,
             'author_id' => (int) $data['author_id'],
