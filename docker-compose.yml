@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: webdesignmdp
       POSTGRES_DB: webdesigndb
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d
@@ -16,6 +16,36 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    networks:
+      - webdesign-network
+
+  webserver:
+    build:
+      context: ./webserver
+      dockerfile: Dockerfile
+      network: host
+    container_name: webdesign-apache
+    ports:
+      - "81:80"
+      - "82:82"
+    volumes:
+      - ./Backoffice:/var/www/html/backoffice
+      - ./Frontoffice:/var/www/html/frontoffice
+      - ./uploads:/var/www/html/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=webdesignuser
+      - POSTGRES_PASSWORD=webdesignmdp
+      - POSTGRES_DB=webdesigndb
+    networks:
+      - webdesign-network
 
 volumes:
   postgres_data:
+
+networks:
+  webdesign-network:
+    driver: bridge

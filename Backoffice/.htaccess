@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /backoffice/
+
+# Rediriger la racine /backoffice/ vers le login
+RewriteRule ^$ index.php?page=auth&action=login [L,QSA]

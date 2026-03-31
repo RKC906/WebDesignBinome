@@ -50,20 +50,7 @@ CREATE TABLE articles
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
-CREATE TABLE comments
-(
-    id SERIAL PRIMARY KEY,
-    contenu TEXT NOT NULL,
-    user_id INTEGER NOT NULL,
-    article_id INTEGER NOT NULL,
-    approved BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE
-);
 
 CREATE INDEX idx_articles_category ON articles(category_id);
 CREATE INDEX idx_articles_author ON articles(author_id);
 CREATE INDEX idx_articles_slug ON articles(slug);
-CREATE INDEX idx_comments_article ON comments(article_id);
-CREATE INDEX idx_comments_user ON comments(user_id);
