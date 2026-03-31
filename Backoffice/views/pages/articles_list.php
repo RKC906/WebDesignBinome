@@ -4,67 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backoffice - Articles</title>
-    <link rel="stylesheet" href="views/css/style.css">
-    <style>
-        .actions { margin: 1rem 0; }
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        th, td { border: 1px solid #e5e7eb; padding: .6rem; text-align: left; }
-        th { background: #f9fafb; }
-        .btn { display: inline-block; padding: .45rem .8rem; border-radius: 6px; text-decoration: none; background: #2563eb; color: #fff; }
-        .btn-danger { background: #dc2626; }
-        .btn-secondary { background: #4b5563; }
-    </style>
+    <link rel="stylesheet" href="/backoffice/views/css/style.css?v=20260331">
 </head>
 <body>
-<main class="container">
-    <div class="actions" style="display:flex;justify-content:space-between;align-items:center;">
-        <p style="margin:0;">Connecté : <strong><?= htmlspecialchars((string) ($_SESSION['admin']['username'] ?? '')) ?></strong></p>
-        <a class="btn btn-secondary" href="/backoffice/index.php?page=auth&action=logout">Se déconnecter</a>
-    </div>
+<div class="bo-layout">
+    <aside class="bo-sidebar">
+        <div class="bo-brand">Iran War News</div>
+        <nav class="bo-nav">
+            <a class="active" href="/backoffice/index.php?page=articles&action=list">Articles</a>
+            <a href="/backoffice/index.php?page=articles&action=create">Nouvel article</a>
+            <a href="/backoffice/index.php?page=auth&action=logout">Se déconnecter</a>
+        </nav>
+        <div class="bo-user">
+            Connecté : <strong><?= htmlspecialchars((string) ($_SESSION['admin']['username'] ?? '')) ?></strong>
+        </div>
+    </aside>
 
-    <h1>Gestion des articles</h1>
+    <main class="bo-main">
+        <div class="bo-topbar">
+            <h1 class="bo-title">Gestion des articles</h1>
+            <a class="bo-btn bo-btn-primary" href="/backoffice/index.php?page=articles&action=create">+ Nouvel article</a>
+        </div>
 
-    <div class="actions">
-        <a class="btn" href="/backoffice/index.php?page=articles&action=create">+ Nouvel article</a>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Titre</th>
-                <th>Slug</th>
-                <th>Auteur</th>
-                <th>Catégorie</th>
-                <th>Publié</th>
-                <th>Créé le</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php if (empty($articles)): ?>
-            <tr>
-                <td colspan="8">Aucun article.</td>
-            </tr>
-        <?php else: ?>
-            <?php foreach ($articles as $item): ?>
-                <tr>
-                    <td><?= (int) $item['id'] ?></td>
-                    <td><?= htmlspecialchars($item['titre']) ?></td>
-                    <td><?= htmlspecialchars($item['slug']) ?></td>
-                    <td><?= htmlspecialchars($item['auteur_nom'] . ' ' . $item['auteur_prenom']) ?></td>
-                    <td><?= htmlspecialchars($item['categorie_nom']) ?></td>
-                    <td><?= !empty($item['published']) ? 'Oui' : 'Non' ?></td>
-                    <td><?= htmlspecialchars((string) $item['created_at']) ?></td>
-                    <td>
-                        <a class="btn btn-secondary" href="/backoffice/index.php?page=articles&action=edit&id=<?= (int) $item['id'] ?>">Modifier</a>
-                        <a class="btn btn-danger" href="/backoffice/index.php?page=articles&action=delete&id=<?= (int) $item['id'] ?>" onclick="return confirm('Supprimer cet article ?');">Supprimer</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        </tbody>
-    </table>
-</main>
+        <section class="bo-card">
+            <table class="bo-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Slug</th>
+                        <th>Auteur</th>
+                        <th>Catégorie</th>
+                        <th>Publié</th>
+                        <th>Créé le</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php if (empty($articles)): ?>
+                    <tr>
+                        <td colspan="8">Aucun article.</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($articles as $item): ?>
+                        <tr>
+                            <td><?= (int) $item['id'] ?></td>
+                            <td><?= htmlspecialchars($item['titre']) ?></td>
+                            <td><?= htmlspecialchars($item['slug']) ?></td>
+                            <td><?= htmlspecialchars($item['auteur_nom'] . ' ' . $item['auteur_prenom']) ?></td>
+                            <td><?= htmlspecialchars($item['categorie_nom']) ?></td>
+                            <td><?= !empty($item['published']) ? 'Oui' : 'Non' ?></td>
+                            <td><?= htmlspecialchars((string) $item['created_at']) ?></td>
+                            <td>
+                                <div class="bo-actions">
+                                    <a class="bo-btn bo-btn-secondary" href="/backoffice/index.php?page=articles&action=edit&id=<?= (int) $item['id'] ?>">Modifier</a>
+                                    <a class="bo-btn bo-btn-danger" href="/backoffice/index.php?page=articles&action=delete&id=<?= (int) $item['id'] ?>" onclick="return confirm('Supprimer cet article ?');">Supprimer</a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
 </body>
 </html>
