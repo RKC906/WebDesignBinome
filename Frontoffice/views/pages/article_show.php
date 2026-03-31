@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars((string) ($pageTitle ?? 'Article')) ?></title>
     <meta name="description" content="<?= htmlspecialchars((string) ($article['description'] ?? '')) ?>">
-    <link rel="stylesheet" href="/frontoffice/views/css/style.css">
+    <link rel="stylesheet" href="/views/css/style.css">
 </head>
 <body>
 <header class="header">
     <div class="container">
-        <a class="logo" href="/frontoffice/">Iran War News</a>
+    <a class="logo" href="/">Iran War News</a>
         <nav class="nav" aria-label="Catégories">
             <?php foreach ($categories as $category): ?>
-                <a href="/frontoffice/categorie/<?= htmlspecialchars((string) $category['slug']) ?>">
+                <a href="/categorie/<?= htmlspecialchars((string) $category['slug']) ?>">
                     <?= htmlspecialchars((string) $category['nom']) ?>
                 </a>
             <?php endforeach; ?>
@@ -24,7 +24,7 @@
 <main class="container">
     <article class="article">
         <p class="meta">
-            <a href="/frontoffice/categorie/<?= htmlspecialchars((string) $article['categorie_slug']) ?>">
+            <a href="/categorie/<?= htmlspecialchars((string) $article['categorie_slug']) ?>">
                 <?= htmlspecialchars((string) $article['categorie_nom']) ?>
             </a>
             · <?= htmlspecialchars((string) $article['auteur_nom']) ?> <?= htmlspecialchars((string) $article['auteur_prenom']) ?>
@@ -41,6 +41,6 @@
     </article>
 </main>
 
-<script src="/frontoffice/views/js/main.js"></script>
+<script src="/views/js/main.js"></script>
 </body>
 </html>

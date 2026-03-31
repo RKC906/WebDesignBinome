@@ -1,6 +1,9 @@
 Options +FollowSymlinks
 RewriteEngine On
-RewriteBase /frontoffice/
+RewriteBase /
+
+# Redirection si l'ancienne URL /frontoffice/ est utilisée
+RewriteRule ^frontoffice/?(.*)$ /$1 [R=301,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

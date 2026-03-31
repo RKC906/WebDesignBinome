@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars((string) ($pageTitle ?? 'Catégorie')) ?></title>
     <meta name="description" content="Actualités de la catégorie <?= htmlspecialchars((string) ($currentCategory['nom'] ?? '')) ?>">
-    <link rel="stylesheet" href="/frontoffice/views/css/style.css">
+    <link rel="stylesheet" href="/views/css/style.css">
 </head>
 <body>
 <header class="header">
     <div class="container">
-        <a class="logo" href="/frontoffice/">Iran War News</a>
+    <a class="logo" href="/">Iran War News</a>
         <nav class="nav" aria-label="Catégories">
             <?php foreach ($categories as $category): ?>
-                <a href="/frontoffice/categorie/<?= htmlspecialchars((string) $category['slug']) ?>">
+                <a href="/categorie/<?= htmlspecialchars((string) $category['slug']) ?>">
                     <?= htmlspecialchars((string) $category['nom']) ?>
                 </a>
             <?php endforeach; ?>
@@ -39,7 +39,7 @@
                             <?= htmlspecialchars((string) $article['created_at']) ?>
                         </p>
                         <h2>
-                            <a href="/frontoffice/article/<?= htmlspecialchars((string) $article['slug']) ?>">
+                            <a href="/article/<?= htmlspecialchars((string) $article['slug']) ?>">
                                 <?= htmlspecialchars((string) $article['titre']) ?>
                             </a>
                         </h2>
@@ -51,6 +51,6 @@
     </section>
 </main>
 
-<script src="/frontoffice/views/js/main.js"></script>
+<script src="/views/js/main.js"></script>
 </body>
 </html>

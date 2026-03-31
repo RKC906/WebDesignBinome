@@ -19,7 +19,7 @@ ON CONFLICT DO NOTHING;
 -- username: cedy
 -- password: cedy123
 INSERT INTO admin (username, password, email) VALUES
-('cedy', 'cedy123', 'cedy@gmail.')com
+('cedy', 'cedy123', 'cedy@gmail.com')
 ON CONFLICT DO NOTHING;
 
 -- Insérer les articles

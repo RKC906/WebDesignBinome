@@ -27,7 +27,7 @@ services:
     container_name: webdesign-apache
     ports:
       - "81:80"
-      - "443:443"
+      - "82:82"
     volumes:
       - ./Backoffice:/var/www/html/backoffice
       - ./Frontoffice:/var/www/html/frontoffice
