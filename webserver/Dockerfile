@@ -5,7 +5,9 @@ FROM php:8.2-apache
 WORKDIR /var/www/html
 
 # Installer les extensions PHP nécessaires
-RUN apt-get update && apt-get install -y \
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -o Acquire::Retries=3 \
+    && apt-get install -y --no-install-recommends \
     libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql \
     && rm -rf /var/lib/apt/lists/*
