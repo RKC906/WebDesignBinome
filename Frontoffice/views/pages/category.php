@@ -9,6 +9,50 @@
     <link rel="stylesheet" href="/views/css/style.css">
 </head>
 <body>
+<?php
+function webp_url(?string $url): ?string
+{
+    if (empty($url) || strpos($url, '/uploads/') !== 0) {
+        return null;
+    }
+
+    $webp = preg_replace('/\.(jpe?g|png)$/i', '.webp', $url);
+    if (!$webp || $webp === $url) {
+        return null;
+    }
+
+    $path = '/var/www/html' . $webp;
+    return file_exists($path) ? $webp : null;
+}
+
+function webp_srcset(?string $url): ?string
+{
+    if (empty($url) || strpos($url, '/uploads/') !== 0) {
+        return null;
+    }
+
+    $base = preg_replace('/\.(jpe?g|png)$/i', '', $url);
+    if (!$base) {
+        return null;
+    }
+
+    $candidates = [];
+    foreach ([600, 1200] as $size) {
+        $variant = sprintf('%s@%d.webp', $base, $size);
+        $path = '/var/www/html' . $variant;
+        if (file_exists($path)) {
+            $candidates[] = sprintf('%s %dw', $variant, $size);
+        }
+    }
+
+    $full = webp_url($url);
+    if ($full) {
+        $candidates[] = sprintf('%s 1600w', $full);
+    }
+
+    return $candidates ? implode(', ', $candidates) : null;
+}
+?>
 <header class="site-header">
     <div class="container">
         <div class="topbar">
@@ -46,7 +90,14 @@
             <?php foreach ($articles as $article): ?>
                 <article class="story-card">
                     <?php if (!empty($article['image_url'])): ?>
-                        <img src="<?= htmlspecialchars((string) $article['image_url']) ?>" alt="<?= htmlspecialchars((string) $article['titre']) ?>" loading="lazy" decoding="async">
+                        <?php $articleWebp = webp_url((string) $article['image_url']); ?>
+                        <?php $articleSrcset = webp_srcset((string) $article['image_url']); ?>
+                        <picture>
+                            <?php if ($articleWebp): ?>
+                                <source type="image/webp" srcset="<?= htmlspecialchars($articleSrcset ?: $articleWebp) ?>" sizes="(max-width: 768px) 100vw, 292px">
+                            <?php endif; ?>
+                            <img src="<?= htmlspecialchars((string) $article['image_url']) ?>" alt="<?= htmlspecialchars((string) $article['titre']) ?>" loading="lazy" decoding="async" sizes="(max-width: 768px) 100vw, 292px">
+                        </picture>
                     <?php endif; ?>
                     <div class="story-body">
                         <span class="badge"><?= htmlspecialchars((string) $article['categorie_nom']) ?></span>
@@ -75,6 +126,6 @@
     </div>
 </footer>
 
-<script src="/views/js/main.js"></script>
+<script src="/views/js/main.js" defer></script>
 </body>
 </html>

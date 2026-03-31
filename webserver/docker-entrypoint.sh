@@ -7,4 +7,9 @@ if [ -d "/var/www/html/uploads" ]; then
   chmod -R 775 /var/www/html/uploads
 fi
 
+# Clear PHP sessions so login page is shown after restart
+if [ -d "/var/lib/php/sessions" ]; then
+  rm -f /var/lib/php/sessions/sess_*
+fi
+
 exec apache2-foreground

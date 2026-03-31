@@ -16,6 +16,9 @@ RUN apt-get update -o Acquire::Retries=3 \
 # Activer mod_rewrite pour le rewriting d'URLs
 RUN a2enmod rewrite
 
+# Activer les modules pour cache navigateur
+RUN a2enmod expires headers
+
 # Activer mod_ssl pour HTTPS
 RUN a2enmod ssl
 

@@ -1,6 +1,49 @@
 <?php
 $featured = $articles[0] ?? null;
 $moreArticles = array_slice($articles, 1);
+
+function webp_url(?string $url): ?string
+{
+    if (empty($url) || strpos($url, '/uploads/') !== 0) {
+        return null;
+    }
+
+    $webp = preg_replace('/\.(jpe?g|png)$/i', '.webp', $url);
+    if (!$webp || $webp === $url) {
+        return null;
+    }
+
+    $path = '/var/www/html' . $webp;
+    return file_exists($path) ? $webp : null;
+}
+
+function webp_srcset(?string $url): ?string
+{
+    if (empty($url) || strpos($url, '/uploads/') !== 0) {
+        return null;
+    }
+
+    $base = preg_replace('/\.(jpe?g|png)$/i', '', $url);
+    if (!$base) {
+        return null;
+    }
+
+    $candidates = [];
+    foreach ([600, 1200] as $size) {
+        $variant = sprintf('%s@%d.webp', $base, $size);
+        $path = '/var/www/html' . $variant;
+        if (file_exists($path)) {
+            $candidates[] = sprintf('%s %dw', $variant, $size);
+        }
+    }
+
+    $full = webp_url($url);
+    if ($full) {
+        $candidates[] = sprintf('%s 1600w', $full);
+    }
+
+    return $candidates ? implode(', ', $candidates) : null;
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -10,6 +53,7 @@ $moreArticles = array_slice($articles, 1);
     <title><?= htmlspecialchars((string) ($pageTitle ?? 'Actualités')) ?></title>
     <meta name="description" content="Dernières actualités sur la guerre en Iran, analyses et reportages complets.">
     <meta name="robots" content="index,follow">
+    <link rel="preload" href="/views/css/style.css" as="style">
     <link rel="stylesheet" href="/views/css/style.css">
 </head>
 <body>
@@ -39,7 +83,16 @@ $moreArticles = array_slice($articles, 1);
         <section class="hero">
             <article class="hero-card">
                 <?php if (!empty($featured['image_url'])): ?>
-                    <img src="<?= htmlspecialchars((string) $featured['image_url']) ?>" alt="<?= htmlspecialchars((string) $featured['titre']) ?>" loading="eager" decoding="async">
+                    <?php $featuredWebp = webp_url((string) $featured['image_url']); ?>
+                    <?php $featuredSrcset = webp_srcset((string) $featured['image_url']); ?>
+                    <?php $featuredSrc = $featuredWebp ?: (string) $featured['image_url']; ?>
+                    <link rel="preload" as="image" href="<?= htmlspecialchars($featuredSrc) ?>" fetchpriority="high">
+                    <picture>
+                        <?php if ($featuredWebp): ?>
+                            <source type="image/webp" srcset="<?= htmlspecialchars($featuredSrcset ?: $featuredWebp) ?>" sizes="(max-width: 900px) 100vw, 820px">
+                        <?php endif; ?>
+                        <img src="<?= htmlspecialchars((string) $featured['image_url']) ?>" alt="<?= htmlspecialchars((string) $featured['titre']) ?>" loading="eager" decoding="async" fetchpriority="high" sizes="(max-width: 900px) 100vw, 820px">
+                    </picture>
                 <?php endif; ?>
                 <div class="hero-body">
                     <span class="kicker">À la une</span>
@@ -64,7 +117,14 @@ $moreArticles = array_slice($articles, 1);
         <?php foreach ($moreArticles as $article): ?>
             <article class="story-card">
                 <?php if (!empty($article['image_url'])): ?>
-                    <img src="<?= htmlspecialchars((string) $article['image_url']) ?>" alt="<?= htmlspecialchars((string) $article['titre']) ?>" loading="lazy" decoding="async">
+                    <?php $articleWebp = webp_url((string) $article['image_url']); ?>
+                    <?php $articleSrcset = webp_srcset((string) $article['image_url']); ?>
+                    <picture>
+                        <?php if ($articleWebp): ?>
+                            <source type="image/webp" srcset="<?= htmlspecialchars($articleSrcset ?: $articleWebp) ?>" sizes="(max-width: 768px) 100vw, 292px">
+                        <?php endif; ?>
+                        <img src="<?= htmlspecialchars((string) $article['image_url']) ?>" alt="<?= htmlspecialchars((string) $article['titre']) ?>" loading="lazy" decoding="async" sizes="(max-width: 768px) 100vw, 292px">
+                    </picture>
                 <?php endif; ?>
                 <div class="story-body">
                     <span class="badge"><?= htmlspecialchars((string) $article['categorie_nom']) ?></span>
@@ -92,6 +152,6 @@ $moreArticles = array_slice($articles, 1);
     </div>
 </footer>
 
-<script src="/views/js/main.js"></script>
+<script src="/views/js/main.js" defer></script>
 </body>
 </html>
