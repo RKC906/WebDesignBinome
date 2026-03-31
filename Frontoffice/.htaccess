@@ -1,0 +1,11 @@
+Options +FollowSymlinks
+RewriteEngine On
+RewriteBase /frontoffice/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^$ index.php [L,QSA]
+
+RewriteRule ^articles/?$ index.php?page=home [L,QSA]
+RewriteRule ^article/([a-z0-9-]+)/?$ index.php?page=article&slug=$1 [L,QSA]
+RewriteRule ^categorie/([a-z0-9-]+)/?$ index.php?page=category&slug=$1 [L,QSA]
